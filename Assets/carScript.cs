@@ -19,12 +19,8 @@ public class carScript : MonoBehaviour
 
     private void Start()
     {
-
-
         JointMotorSpeed2D.maxMotorTorque = 10000f;
-
         _slider.maxValue = 1000f;
-
     }
 
     private void Update()
@@ -32,8 +28,8 @@ public class carScript : MonoBehaviour
         //_slider.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         cam.transform.position = new Vector3(_playerTransform.transform.position.x, _playerTransform.transform.position.y, -10f);
 
-
-
+        //TODO: this should be a moving slider then player will time the stop of the slider the speed of the motor depend on the slider
+        //--The flag should be the finish line and the score of the player will depend on the distance to the flag
         if (Input.GetKey(KeyCode.Space))
         {
             JointMotorSpeed2D.motorSpeed = _slider.value;
