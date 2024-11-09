@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class gravity : MonoBehaviour
@@ -8,30 +10,59 @@ public class gravity : MonoBehaviour
     [SerializeField] private float maxGravityRadius;
     [SerializeField] private float minGravityRadius;
     [SerializeField] private LayerMask ballLayer;
-    [SerializeField] private Rigidbody2D playerRB;
-
+    //[SerializeField] private Rigidbody2D playerRB;
     /// <summary>
     /// redo this different approach
     /// </summary>
+    private void Start()
+    {
+       //var ball = Physics2D.OverlapCircleAll(transform.position, minGravityRadius, ballLayer);
+    }
+
     private void Update()
     {
-        Collider2D ball = Physics2D.OverlapCircle(transform.position, minGravityRadius, ballLayer);
-        playerRB = ball.GetComponent<Rigidbody2D>();
+        var ballRB = Physics2D.OverlapCircleAll(transform.position, minGravityRadius, ballLayer);
 
-        var direction = (transform.position - playerRB.transform.position);
-        var revDirection = (playerRB.transform.position - transform.position);
-
-        var dis = Vector2.Distance(ball.transform.position , transform.position);
-
-        if(dis > maxGravityRadius)
+        foreach (var balls in ballRB)
         {
-            playerRB.AddForce(direction * (forceIntesity * ((Vector2.Distance(transform.position + (revDirection * maxGravityRadius),playerRB.transform.position))/minGravityRadius)));
+            //balls.gameObject.GetComponent<Rigidbody2D>();
+
+            var getrb = balls.gameObject.GetComponent<Rigidbody2D>();
+
+            var eachBallDistance = Vector2.Distance(balls.transform.position, transform.position);
+
+            var direction = (transform.position - getrb.transform.position);
+            var revDirection = (getrb.transform.position - transform.position);
+
+            if (eachBallDistance > maxGravityRadius)
+            {
+                getrb.AddForce(direction * (forceIntesity * ((Vector2.Distance(transform.position + (revDirection * maxGravityRadius), getrb.transform.position)) / minGravityRadius)));
+            }
+            else
+            {
+                getrb.AddForce(direction * (forceIntesity));
+            }
         }
-        else
-        {
-            playerRB.AddForce(direction * (forceIntesity));
-        }
+
+
+        //var dis = Vector2.Distance(ball[0].transform.position , transform.position);
+
+        //if(dis > maxGravityRadius)
+        //{
+        //    playerRB.AddForce(direction * (forceIntesity * ((Vector2.Distance(transform.position + (revDirection * maxGravityRadius),playerRB.transform.position))/minGravityRadius)));
+        //}
+        //else
+        //{
+        //    playerRB.AddForce(direction * (forceIntesity));
+        //}
     }
+
+    //void randomForceIntensity(float sdsd)
+    //{
+    //    var sdsd = Random.Range(5, forceIntesity);
+
+    //    return sdsd;
+    //}
 
     private void OnDrawGizmos()
     {
